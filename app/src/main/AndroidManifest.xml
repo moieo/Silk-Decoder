@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ecodemo.silk">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <application
+        android:name="com.ecodemo.silk.MxApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="com.ecodemo.silk.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ecodemo.silk.AboutActivity"
+            android:label="@string/open_source">
+        </activity>
+        <activity
+            android:name="com.ecodemo.silk.DecodeFile"
+            android:label="@string/decode_file">
+        </activity>
+        <activity
+            android:name="com.ecodemo.silk.QQDecoder"
+            android:label="@string/qq_decoder">
+        </activity>
+    </application>
+</manifest>
