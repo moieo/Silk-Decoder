@@ -1,0 +1,71 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceScreen
+        android:key="qq_decoder"
+        android:title="QQ语音"
+        android:summary="扫描QQ里收到的Silkv3语音">
+        
+        <intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.ecodemo.silk"  
+            android:targetClass="com.ecodemo.silk.QQDecoder" />  
+        
+    </PreferenceScreen>
+    
+    <PreferenceScreen
+        android:key="other_decoder"
+        android:title="Silk文件解码"
+        android:summary="你必须把Silkv3语音文件复制到 内部存储/Silk解码器 文件夹内">
+        
+        <intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.ecodemo.silk"  
+            android:targetClass="com.ecodemo.silk.OtherDecoder" />  
+        
+    </PreferenceScreen>
+    
+    <!-- <Preference
+        android:key="diy_decoder"
+        android:title="自定义解码"
+        android:summary="选择你的Silkv3文件解码" /> -->
+
+    <PreferenceScreen
+        android:key="decoder_file"
+        android:title="解码文件"
+        android:summary="在这里查看你已经解码的文件">
+        
+        <intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.ecodemo.silk"  
+            android:targetClass="com.ecodemo.silk.DecodeFile" />
+
+    </PreferenceScreen>
+        
+    <PreferenceScreen
+        android:key="open_source"
+        android:title="开源许可"
+        android:summary="本应用使用到的开源">
+        
+        <intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.ecodemo.silk"  
+            android:targetClass="com.ecodemo.silk.AboutActivity" />  
+        
+    </PreferenceScreen>
+    
+    <Preference
+        android:title="作者酷安"
+        android:summary="跳转到作者酷安主页">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="coolmarket://u/1512829" />
+    </Preference>
+    
+    <Preference
+        android:title="软件酷安"
+        android:summary="跳转到软件酷安主页">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="coolmarket://apk/com.ecodemo.silk" />
+    </Preference>
+    
+</PreferenceScreen>

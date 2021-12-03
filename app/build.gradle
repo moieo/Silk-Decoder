@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+//自定义方法
+def releaseTime(){
+    return new Date().format("yyyyMMdd",java.util.TimeZone.getTimeZone("UTC"))
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+    ndkVersion '23.0.7599858'
+	ndkPath '/root/android/android-ndk'
+	
+	buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+    
+    defaultConfig {
+        applicationId "com.ecodemo.silk"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 20
+        versionName "1.1.4"
+        multiDexEnabled true
+        
+    		externalNativeBuild {
+            cmake {
+                cppFlags ""
+                //arguments "-DANDROID_STL=c++_shared"
+        				abiFilters 'arm64-v8a', 'x86'
+            }
+        }
+    }
+
+    lintOptions {
+          abortOnError false
+    }
+	
+    buildTypes {
+		    debug{
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+		      	//signingConfig signingConfigs.release
+        }
+        release {
+            minifyEnabled true
+            multiDexEnabled true
+            zipAlignEnabled true
+            //signingConfig signingConfigs.release
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+	
+	compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+	
+	//修改生成的apk名字，格式为 app名_版本号_打包时间_渠道名_release.apk
+    applicationVariants.all{ variant->
+        variant.outputs.all{
+            outputFileName= "Silk解码器_${defaultConfig.versionName}_${releaseTime()}.apk"
+        }
+    }
+    
+    
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.19.8"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	  implementation 'androidx.core:core-ktx:1.3.1'
+  	implementation 'androidx.multidex:multidex:2.0.1'
+  	implementation 'androidx.recyclerview:recyclerview:1.1.0'
+  	implementation 'androidx.documentfile:documentfile:1.0.1'
+}
