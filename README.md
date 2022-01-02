@@ -5,4 +5,5 @@ You can use it to convert silk to MP3 or other required formats on your Android 
 - Add external storage silk file decoding
 - Fix some known problems
 
-[![Stargazers repo roster for @nastyox/Repo-Roster](https://reporoster.com/stars/nastyox/Repo-Roster)](https://github.com/nastyox/Repo-Roster/stargazers)
+[![Stargazers repo roster for @ecodemo/Silk-Decoder](https://reporoster.com/stars/ecodemo/Silk-Decoder)](https://github.com/ecodemo/Silk-Decoder/stargazers)
+[![Forkers repo roster for @ecodemo/Silk-Decoder](https://reporoster.com/forks/ecodemo/Silk-Decoder)](https://github.com/ecodemo/Silk-Decoder/network/members)
