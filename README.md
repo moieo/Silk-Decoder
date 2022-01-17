@@ -7,7 +7,9 @@ You can use it to convert silk to MP3 or other required formats on your Android 
 [![GitHub license](https://img.shields.io/github/license/Ecodemo/Silk-Decoder)](https://github.com/Ecodemo/Silk-Decoder/blob/main/LICENSE)
 [![Download Releases](https://img.shields.io/badge/Releases-Download-green)](https://github.com/Ecodemo/Silk-Decoder/releases)
 #### Update
-- Add external storage silk file decoding
+- Adapt to Android 12
+- New support for deleting voice files
+- Pre added FFmpeg decoding
 - Fix some known problems
 
 [![Stargazers repo roster for @ecodemo/Silk-Decoder](https://reporoster.com/stars/ecodemo/Silk-Decoder)](https://github.com/ecodemo/Silk-Decoder/stargazers)
