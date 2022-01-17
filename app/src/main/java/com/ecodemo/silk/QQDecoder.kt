@@ -243,6 +243,7 @@ class QQDecoder : Activity() {
                     /* handler.sendEmptyMessage(7)
                     list.sortByDescending({ it.lastModified().toInt() })*/
                     handler.sendEmptyMessage(6)
+                    handler.sendEmptyMessage(999)
                     break
                 }
                 continue

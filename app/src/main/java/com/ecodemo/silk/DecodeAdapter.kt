@@ -35,7 +35,7 @@ class DecodeAdapter(var context_: Context, var dataList: MutableList<File>): Rec
         holder.date?.text = sdf.format(Date(file.lastModified()))
         holder.size?.text = MxRecyclerAdapter.getFileSize(file.length().toFloat())
         holder.root?.setOnClickListener {
-            var items = arrayOf("播放"/*,"删除"*/)
+            var items = arrayOf("播放", "删除")
             //var path = dataList[holder].getUri().getPath()
             var dialog_ = AlertDialog.Builder(context)
             dialog_.setItems(items, DialogInterface.OnClickListener(){_, witch ->
@@ -43,8 +43,12 @@ class DecodeAdapter(var context_: Context, var dataList: MutableList<File>): Rec
                     0 -> {
                         PlayerUtils(context, file)
                     }
-                    0 -> {
-                        
+                    1 -> {
+                        file.delete()
+                        if (file.exists()) {
+                            dataList.remove(file)
+                            notifyDataSetChanged()
+                        }
                     }
                 }
             })

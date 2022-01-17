@@ -41,7 +41,14 @@
             android:targetClass="com.ecodemo.silk.DecodeFile" />
 
     </PreferenceScreen>
+    
+    <Preference
+        android:key="install_ffmpeg"
+        android:title="安装FFmpeg"
+        android:summary="安装 FFmpeg 后可使用 FFmpeg 进行转码">
         
+    </Preference>
+    
     <PreferenceScreen
         android:key="open_source"
         android:title="开源许可"
@@ -55,17 +62,28 @@
     </PreferenceScreen>
     
     <Preference
-        android:title="作者酷安"
-        android:summary="跳转到作者酷安主页">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="coolmarket://u/1512829" />
+        android:key="update_log"
+        android:title="更新日志"
+        android:summary="前往 Github Release 查看各个版本">
+        
     </Preference>
     
     <Preference
+        android:key="issue"
+        android:title="Issue"
+        android:summary="前往 Github Issue 提出建议，你也可以在酷安评论区进行反馈">
+    </Preference>
+    
+    <Preference
+        android:key="author_coolapk"
+        android:title="作者酷安"
+        android:summary="跳转到作者酷安主页">
+    </Preference>
+    
+    <Preference
+        android:key="app_coolapk"
         android:title="软件酷安"
         android:summary="跳转到软件酷安主页">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="coolmarket://apk/com.ecodemo.silk" />
     </Preference>
     
 </PreferenceScreen>

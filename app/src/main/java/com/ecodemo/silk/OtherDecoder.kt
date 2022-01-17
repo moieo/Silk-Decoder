@@ -74,7 +74,7 @@ class OtherDecoder : Activity() {
             }
         }
         if(it.what == 999) {
-            if(list.size == 0) {
+            if(list.size <= 0) {
                 binding.tisp.text = "啥也没有"
                 binding.tisp.visibility = View.VISIBLE
             }
@@ -245,6 +245,7 @@ class OtherDecoder : Activity() {
                     /* handler.sendEmptyMessage(7)
                     list.sortByDescending({ it.lastModified().toInt() })*/
                     handler.sendEmptyMessage(6)
+                    handler.sendEmptyMessage(999)
                     break
                 }
                 continue

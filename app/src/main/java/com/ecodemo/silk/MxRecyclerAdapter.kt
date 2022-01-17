@@ -86,7 +86,7 @@ class MxRecyclerAdapter(var context_: Context, var dataList: MutableList<Documen
         var fileDescriptor = slk.getFileDescriptor()//得到文件描述
         var fis_size = FileInputStream(fileDescriptor)
         var size_text = getFileSize(fis_size.getChannel().size().toFloat())
-        holder.size?.text=size_text
+        holder.size?.text = size_text
         fis_size.close()
         
         holder.date?.text = sdf.format(Date(dataList[holder.getAdapterPosition()].lastModified()))
@@ -94,7 +94,7 @@ class MxRecyclerAdapter(var context_: Context, var dataList: MutableList<Documen
         holder.title?.text = path?.substring(path.lastIndexOf("/")+1, path.length)!!
         
         holder.root?.setOnClickListener {
-            var items = arrayOf("播放", "解码"/*,"删除"*/)
+            var items = arrayOf("播放", "解码", "删除")
             //var path = dataList[holder].getUri().getPath()
             var dialog_ = AlertDialog.Builder(context)
             dialog_.setItems(items, DialogInterface.OnClickListener(){_, which ->
@@ -108,12 +108,27 @@ class MxRecyclerAdapter(var context_: Context, var dataList: MutableList<Documen
                         })
                     }
                     1 -> {
-                        decoder_to_file(dataList[holder.getAdapterPosition()].getUri(), app_cache, OnDecode { mp3 ->
-                            var msg = Message()
-                            msg.what = 201
-                            msg.obj = mp3.getAbsolutePath()
-                            handler.sendMessage(msg)
-                        })
+                        if (File(context.getFilesDir(), "ffmpeg").exists()) {
+                            ffmpeg_decoder(dataList[holder.getAdapterPosition()].getUri(), app_cache, OnDecode { mp3 ->
+                                var msg = Message()
+                                msg.what = 201
+                                msg.obj = mp3.getAbsolutePath()
+                                handler.sendMessage(msg)
+                            })
+                        } else {
+                            decoder_to_file(dataList[holder.getAdapterPosition()].getUri(), app_cache, OnDecode { mp3 ->
+                                var msg = Message()
+                                msg.what = 201
+                                msg.obj = mp3.getAbsolutePath()
+                                handler.sendMessage(msg)
+                            })
+                        }
+                    }
+                    2 -> {
+                        var file: DocumentFile = dataList[holder.getAdapterPosition()]
+                        file.delete()
+                        dataList.remove(file)
+                        notifyDataSetChanged()
                     }
                 }
             })
@@ -133,6 +148,20 @@ class MxRecyclerAdapter(var context_: Context, var dataList: MutableList<Documen
             size = binding.size
             root = item
         }
+    }
+    
+    fun ffmpeg_decoder(source: Uri, cache: File, de: OnDecode?) {
+        var items = arrayOf("普通解码", "Mp3", "Wav", "Amr", "Flac", "Mp4")
+        //var path = dataList[holder].getUri().getPath()
+        var dialog_ = AlertDialog.Builder(context)
+        dialog_.setItems(items, DialogInterface.OnClickListener(){_, which ->
+            when(which) {
+                0 -> {
+                    decoder_to_file(source!!, cache!!, de!!)
+                }
+            }
+         })
+         dialog_.show()
     }
     
     fun decoder(uri: Uri?): File {
