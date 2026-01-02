@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 
 import java.io.File
 import android.net.Uri
@@ -11,7 +11,6 @@ import android.os.Looper
 import android.view.View
 import java.util.LinkedList
 import java.lang.Runnable
-import java.lang.Character
 import android.os.Message
 import java.util.Collections
 import android.view.Menu
@@ -26,7 +25,7 @@ import android.content.Context
 import android.provider.Settings
 import android.app.ProgressDialog
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executors
 import android.content.DialogInterface
 import androidx.core.app.ActivityCompat
 import java.util.concurrent.ExecutorService
@@ -34,7 +33,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.documentfile.provider.DocumentFile
-import com.ecodemo.silk.databinding.ActivityMainBinding
+import com.xmoieo.silk.databinding.ActivityMainBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.DividerItemDecoration
 
@@ -87,31 +86,74 @@ class QQDecoder : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
         actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         adapter = MxRecyclerAdapter(this, list)
-        var decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         binding.recycle.addItemDecoration(decoration)
-        var layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         layoutManager.setRecycleChildrenOnDetach(true)
         binding.recycle.layoutManager = layoutManager
         binding.recycle.adapter = adapter
         binding.recycle.setHasFixedSize(true)
         binding.recycle.setItemViewCacheSize(60)
-        binding.recycle.setDrawingCacheEnabled(true)
+        @Suppress("DEPRECATION")
+        binding.recycle.isDrawingCacheEnabled = true
         
         
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){ //安卓11 以上
-            if(!FileUriUtils.isGrant(this@QQDecoder)){
-                FileUriUtils.startForRoot(this@QQDecoder, 200)
-                return;
+        // Android 11+ (API 30+) 需要通过 SAF 访问 Android/data
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!FileUriUtils.isGrant(this@QQDecoder)) {
+                // 显示提示对话框
+                AlertDialog.Builder(this)
+                    .setTitle("需要访问权限")
+                    .setMessage("为了读取QQ语音文件，需要您授予访问 Android/data 目录的权限。\n\n请在接下来的页面中点击 \"data\" 文件夹，然后点击 \"使用此文件夹\"。")
+                    .setPositiveButton("去授权") { _, _ ->
+                        FileUriUtils.startForRoot(this@QQDecoder, 200)
+                    }
+                    .setNegativeButton("取消") { _, _ ->
+                        finish()
+                    }
+                    .setCancelable(false)
+                    .show()
+                return
             }
-            document = DocumentFile.fromTreeUri(this, Uri.parse(FileUriUtils.changeToUri("/storage/emulated/0/Android/data/com.tencent.mobileqq/Tencent/MobileQQ/")))
+            
+            // 从已授权的 Android/data 目录获取 QQ 数据目录
+            val androidData = FileUriUtils.getAndroidDataDocumentFile(this)
+            if (androidData == null) {
+                binding.tisp.text = "无法访问Android/data目录"
+                binding.tisp.visibility = View.VISIBLE
+                return
+            }
+            
+            // 遍历获取 QQ 目录: com.tencent.mobileqq -> Tencent -> MobileQQ
+            var qqDir = androidData.findFile("com.tencent.mobileqq")
+            if (qqDir != null && qqDir.isDirectory) {
+                qqDir = qqDir.findFile("Tencent")
+                if (qqDir != null && qqDir.isDirectory) {
+                    qqDir = qqDir.findFile("MobileQQ")
+                }
+            }
+            
+            if (qqDir == null || !qqDir.exists() || !qqDir.isDirectory) {
+                binding.tisp.text = "未找到QQ数据目录，请确认QQ已安装\n或检查是否有语音记录"
+                binding.tisp.visibility = View.VISIBLE
+                return
+            }
+            document = qqDir
         } else {
-            var file_: File = File(sd_path, "Android/data/com.tencent.mobileqq/Tencent/MobileQQ/")
+            // Android 10 及以下直接使用文件系统
+            val file_ = File(sd_path, "Android/data/com.tencent.mobileqq/Tencent/MobileQQ/")
+            if (!file_.exists()) {
+                binding.tisp.text = "未找到QQ数据目录，请确认QQ已安装"
+                binding.tisp.visibility = View.VISIBLE
+                return
+            }
             document = DocumentFile.fromFile(file_)
         }
         
@@ -159,6 +201,7 @@ class QQDecoder : Activity() {
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 	    when(item.getItemId()){
 	        2 -> {
+	            @Suppress("DEPRECATION")
 	            progress = ProgressDialog.show(this, "正在排序，请稍候...", null, true, false)
 	            Thread {
 	                list.sortBy({ it.lastModified().toInt() })
@@ -166,6 +209,7 @@ class QQDecoder : Activity() {
 	            }.start()
 	        }
 	        3 -> {
+	            @Suppress("DEPRECATION")
 	            progress = ProgressDialog.show(this, "正在排序，请稍候...", null, true, false)
 	            Thread {
 	                list.sortByDescending({ it.lastModified().toInt() })
@@ -183,18 +227,25 @@ class QQDecoder : Activity() {
     }
 	
 	
-	override fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, Data)
-        var uri: Uri? = Data?.getData()
-        if (requestCode == 200 && uri != null) {
-            var flag = (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            getContentResolver().takePersistableUriPermission(uri, Data!!.flags and flag)
-            reload()
+	@Deprecated("Deprecated in Java")
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == 200) {
+            if (FileUriUtils.handleActivityResult(this, requestCode, resultCode, data, 200)) {
+                // 权限授予成功，重新加载
+                reload()
+            } else {
+                // 用户取消或授权失败
+                Toast.makeText(this, "需要授权才能访问QQ语音文件", Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
     
+    @Suppress("DEPRECATION")
     fun reload() {
-		var intent = getIntent()
+		val intent = getIntent()
 		overridePendingTransition(0, 0)
 		intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
 		finish()
@@ -215,9 +266,10 @@ class QQDecoder : Activity() {
         return matcher.matches()
     }
     
+    @Suppress("DEPRECATION")
     fun scanFiles() {
         list.clear()
-        var files: Array<DocumentFile>? = document?.listFiles()
+        val files: Array<DocumentFile>? = document?.listFiles()
         progress = ProgressDialog.show(this, "正在扫描，请稍候...", null, true, false)
         
         var exe = Executors.newCachedThreadPool()

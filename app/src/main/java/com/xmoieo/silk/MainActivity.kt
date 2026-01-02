@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 
 import java.io.File
 import android.net.Uri
@@ -11,7 +11,6 @@ import android.os.Looper
 import android.view.View
 import java.util.LinkedList
 import java.lang.Runnable
-import java.lang.Character
 import android.os.Message
 import java.util.Collections
 import android.view.Menu
@@ -34,9 +33,10 @@ import java.util.concurrent.ExecutorService
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import android.preference.PreferenceActivity
+
+@Suppress("DEPRECATION")
 class MainActivity: PreferenceActivity() {
 
-  @Suppress("DEPRECATION")
   private val app_cache: File = File(Environment.getExternalStorageDirectory(), "Silk解码器")
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class MainActivity: PreferenceActivity() {
 
     /* 设置状态栏字体色 不然看不清字*/
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+      window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
     addPreferencesFromResource(R.xml.main)
 
@@ -81,16 +81,16 @@ class MainActivity: PreferenceActivity() {
 
     findPreference("app_coolapk")?.setOnPreferenceClickListener {
       try {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://apk/com.ecodemo.silk")))
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://apk/com.xmoieo.silk")))
       } catch (e: Exception) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/com.ecodemo.silk")))
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/com.xmoieo.silk")))
       }
       true
     }
     
     findPreference("update_log")?.setOnPreferenceClickListener {
       try {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Ecodemo/Silk-Decoder/releases")))
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Moieo/Silk-Decoder/releases")))
       } catch (e: Exception) {
         Toast.makeText(this, "跳转失败：你可能没有安装浏览器", Toast.LENGTH_SHORT).show()
       }
@@ -99,7 +99,7 @@ class MainActivity: PreferenceActivity() {
     
     findPreference("issue")?.setOnPreferenceClickListener {
       try {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Ecodemo/Silk-Decoder/issues")))
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Moieo/Silk-Decoder/issues")))
       } catch (e: Exception) {
         Toast.makeText(this, "跳转失败：你可能没有安装浏览器", Toast.LENGTH_SHORT).show()
       }
@@ -108,9 +108,10 @@ class MainActivity: PreferenceActivity() {
   }
   
   //返回授权状态
+  @Deprecated("Deprecated in Java")
   override fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
     super.onActivityResult(requestCode, resultCode, Data)
-    var uri: Uri? = Data?.getData()
+    val uri: Uri? = Data?.data
     if (requestCode == 0xFC && uri != null) {
       if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
         if(Environment.isExternalStorageManager()){

@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 import java.io.File
 import java.util.Date
 import android.view.View
@@ -8,14 +8,14 @@ import android.content.Context
 import android.widget.TextView
 import android.view.LayoutInflater
 import java.text.SimpleDateFormat
-import android.content.DialogInterface
 import androidx.recyclerview.widget.RecyclerView
-import com.ecodemo.silk.databinding.DecodeItemBinding
+import com.xmoieo.silk.databinding.DecodeItemBinding
 
 class DecodeAdapter(var context_: Context, var dataList: MutableList<File>): RecyclerView.Adapter<DecodeAdapter.ViewHolder>() {
 
     var context = context_
     
+    @Suppress("SimpleDateFormat")
     private var sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     
     private lateinit var binding: DecodeItemBinding
@@ -30,15 +30,15 @@ class DecodeAdapter(var context_: Context, var dataList: MutableList<File>): Rec
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val file = dataList[holder.getAdapterPosition()]
-        holder.title?.text = file?.name
+        val file = dataList[holder.bindingAdapterPosition]
+        holder.title?.text = file.name
         holder.date?.text = sdf.format(Date(file.lastModified()))
         holder.size?.text = MxRecyclerAdapter.getFileSize(file.length().toFloat())
         holder.root?.setOnClickListener {
-            var items = arrayOf("播放", "删除")
+            val items = arrayOf("播放", "删除")
             //var path = dataList[holder].getUri().getPath()
-            var dialog_ = AlertDialog.Builder(context)
-            dialog_.setItems(items, DialogInterface.OnClickListener(){_, witch ->
+            val dialog_ = AlertDialog.Builder(context)
+            dialog_.setItems(items) { _, witch ->
                 when(witch) {
                     0 -> {
                         PlayerUtils(context, file)
@@ -51,7 +51,7 @@ class DecodeAdapter(var context_: Context, var dataList: MutableList<File>): Rec
                         }
                     }
                 }
-            })
+            }
             dialog_.show()
         }
     }

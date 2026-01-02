@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 
 import android.app.Application
 import androidx.multidex.MultiDex

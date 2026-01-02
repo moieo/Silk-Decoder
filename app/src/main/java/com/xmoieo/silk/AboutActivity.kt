@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 
 import android.net.Uri
 import android.os.Build
@@ -23,10 +23,11 @@ class AboutActivity : Activity() {
         web.settings.javaScriptEnabled = true
         web.loadUrl("file:///android_asset/about.html")
         web.setWebViewClient(object: WebViewClient() {
+            @Deprecated("Deprecated in Java")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-				startActivity(intent)
-				return true
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+                return true
             }
         })
         setContentView(web)

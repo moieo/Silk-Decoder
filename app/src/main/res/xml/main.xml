@@ -2,52 +2,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceScreen
-        android:key="qq_decoder"
-        android:title="QQ语音"
-        android:summary="扫描QQ里收到的Silkv3语音">
+        android:key="silk_decoder"
+        android:title="Silk解码"
+        android:summary="选择 Silk 文件解码为 MP3">
         
         <intent  
             android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.ecodemo.silk"  
-            android:targetClass="com.ecodemo.silk.QQDecoder" />  
+            android:targetPackage="com.xmoieo.silk"  
+            android:targetClass="com.xmoieo.silk.SilkDecoder" />  
         
     </PreferenceScreen>
     
     <PreferenceScreen
-        android:key="other_decoder"
-        android:title="Silk文件解码"
-        android:summary="你必须把Silkv3语音文件复制到 内部存储/Silk解码器 文件夹内">
+        android:key="silk_encoder"
+        android:title="Silk编码"
+        android:summary="将音频文件编码为 Silk 格式">
         
         <intent  
             android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.ecodemo.silk"  
-            android:targetClass="com.ecodemo.silk.OtherDecoder" />  
-        
-    </PreferenceScreen>
-    
-    <!-- <Preference
-        android:key="diy_decoder"
-        android:title="自定义解码"
-        android:summary="选择你的Silkv3文件解码" /> -->
-
-    <PreferenceScreen
-        android:key="decoder_file"
-        android:title="解码文件"
-        android:summary="在这里查看你已经解码的文件">
-        
-        <intent  
-            android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.ecodemo.silk"  
-            android:targetClass="com.ecodemo.silk.DecodeFile" />
+            android:targetPackage="com.xmoieo.silk"  
+            android:targetClass="com.xmoieo.silk.SilkEncoder" />
 
     </PreferenceScreen>
-    
-    <Preference
-        android:key="install_ffmpeg"
-        android:title="安装FFmpeg"
-        android:summary="安装 FFmpeg 后可使用 FFmpeg 进行转码">
-        
-    </Preference>
     
     <PreferenceScreen
         android:key="open_source"
@@ -56,8 +32,8 @@
         
         <intent  
             android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.ecodemo.silk"  
-            android:targetClass="com.ecodemo.silk.AboutActivity" />  
+            android:targetPackage="com.xmoieo.silk"  
+            android:targetClass="com.xmoieo.silk.AboutActivity" />  
         
     </PreferenceScreen>
     

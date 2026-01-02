@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* Silk decoder test program */
 /*****************************/
 
-#include "com_ecodemo_silk_SilkCoder.h"
+#include "com_xmoieo_silk_SilkCoder.h"
 #include "coder.h"
 
 
@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 static SKP_int32 rand_seed = 1;
 
 
-JNIEXPORT void JNICALL Java_com_ecodemo_silk_SilkCoder_decode
+JNIEXPORT void JNICALL Java_com_xmoieo_silk_SilkCoder_decode
         (JNIEnv *env, jclass jclass1, jstring source, jstring dest, jint fs_hz, jint loss) {
 
     unsigned long tottime, starttime;

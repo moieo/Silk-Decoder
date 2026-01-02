@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.ecodemo.silk">
+    package="com.xmoieo.silk">
     <!-- android:sharedUserId="com.termux" -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -11,33 +11,31 @@
     <application
 		android:hardwareAccelerated="false"
 		android:largeHeap="true"
-        android:name="com.ecodemo.silk.MxApplication"
+        android:name="com.xmoieo.silk.MxApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ecodemo.silk.MainActivity">
+        <activity android:name="com.xmoieo.silk.MainActivity"
+            android:exported="true"
+            tools:ignore="ExportedPreferenceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ecodemo.silk.AboutActivity"
+            android:name="com.xmoieo.silk.AboutActivity"
             android:label="@string/open_source">
         </activity>
         <activity
-            android:name="com.ecodemo.silk.DecodeFile"
-            android:label="@string/decode_file">
+            android:name="com.xmoieo.silk.SilkDecoder"
+            android:label="@string/silk_decoder">
         </activity>
         <activity
-            android:name="com.ecodemo.silk.QQDecoder"
-            android:label="@string/qq_decoder">
-        </activity>
-        <activity
-            android:name="com.ecodemo.silk.OtherDecoder"
-            android:label="@string/other_decoder">
+            android:name="com.xmoieo.silk.SilkEncoder"
+            android:label="@string/silk_encoder">
         </activity>
     </application>
 </manifest>

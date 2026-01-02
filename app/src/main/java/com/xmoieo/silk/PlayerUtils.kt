@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 
 import java.io.File
 import android.os.Handler
@@ -10,28 +10,28 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.content.DialogInterface
-import com.ecodemo.silk.databinding.MediaBinding
+import com.xmoieo.silk.databinding.MediaBinding
 import android.widget.SeekBar.OnSeekBarChangeListener
 
 /* 播放器 Dialog */
 class PlayerUtils {
 
     private val mediaPlayer = MediaPlayer()
-    private lateinit var binding: MediaBinding
+    private var binding: MediaBinding? = null
     private var total_time: Int = 0
     @Suppress("UNUSED", "DEPRECATION")
     private var handler: Handler = Handler {
-        binding.progress.setProgress(it.obj as Int)
-        var a = timeFormat(it.obj as Int)
-        var b = timeFormat(total_time)
-        binding.time.text = "$a/$b"
+        binding?.progress?.setProgress(it.obj as Int)
+        val a = timeFormat(it.obj as Int)
+        val b = timeFormat(total_time)
+        binding?.time?.text = "$a/$b"
         false
     }
     private var playing = true;
     private val thread: Thread = Thread {
         while (playing){
-            var currentPosition = mediaPlayer.getCurrentPosition()
-            var msg = Message()
+            val currentPosition = mediaPlayer.currentPosition
+            val msg = Message()
             msg.what = 0
             msg.obj = currentPosition
             handler.sendMessage(msg)
@@ -41,11 +41,11 @@ class PlayerUtils {
     }
     constructor(context: Context, file: File) {
         binding = MediaBinding.inflate(LayoutInflater.from(context))
-        var dialog =  AlertDialog.Builder(context)
-        binding.name.text = file.name
-        dialog.setView(binding.root)
+        val dialog = AlertDialog.Builder(context)
+        binding?.name?.text = file.name
+        dialog.setView(binding?.root)
         dialog.setTitle("音乐播放器")
-        dialog.setNegativeButton("播放/暂停", DialogInterface.OnClickListener() {dialog_, _ ->
+        dialog.setNegativeButton("播放/暂停") { dialog_, _ ->
             if(mediaPlayer.isPlaying()){
                 mediaPlayer.pause()
             } else {
@@ -56,39 +56,39 @@ class PlayerUtils {
             field.setAccessible(true)
             field.set(dialog_, false) /* 防止消失 */
             //dialog_.dismiss()
-        })
-        dialog.setPositiveButton("关闭", DialogInterface.OnClickListener() {_dialog, _ ->
-            if(mediaPlayer.isPlaying()){
+        }
+        dialog.setPositiveButton("关闭") { _dialog, _ ->
+            if(mediaPlayer.isPlaying){
                 mediaPlayer.stop()
             }
-            var field = _dialog.javaClass.getSuperclass().getDeclaredField("mShowing")
+            val field = _dialog.javaClass.getSuperclass().getDeclaredField("mShowing")
             field.setAccessible(true)
             field.set(_dialog, true)/* 防止不消失 */
             _dialog.dismiss()
-        })
-        dialog.setOnCancelListener(DialogInterface.OnCancelListener(){_->
+        }
+        dialog.setOnCancelListener { _ ->
             playing = false
-        })
+        }
         var d = dialog.create()
         d.setCanceledOnTouchOutside(false)
         d.show()
         
-        binding.progress.setOnSeekBarChangeListener(object: OnSeekBarChangeListener {
+        binding?.progress?.setOnSeekBarChangeListener(object: OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
             }
             override fun onStartTrackingTouch(p0: SeekBar?) {
             }
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                mediaPlayer.seekTo(p0?.getProgress()!!)
+                mediaPlayer.seekTo(p0?.progress ?: 0)
                 mediaPlayer.start()
             }
         })
-        var fis = FileInputStream(file)
-		mediaPlayer.setDataSource(fis.getFD())
+        val fis = FileInputStream(file)
+		mediaPlayer.setDataSource(fis.fd)
 		mediaPlayer.prepare()
 		mediaPlayer.start()
-		total_time = mediaPlayer.getDuration()
-		binding.progress.setMax(mediaPlayer.getDuration())
+		total_time = mediaPlayer.duration
+		binding?.progress?.max = mediaPlayer.duration
 		thread.start()
 	}
 	

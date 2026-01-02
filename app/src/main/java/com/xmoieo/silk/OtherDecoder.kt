@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 
 import java.io.File
 import android.net.Uri
@@ -11,7 +11,6 @@ import android.os.Looper
 import android.view.View
 import java.util.LinkedList
 import java.lang.Runnable
-import java.lang.Character
 import android.os.Message
 import java.util.Collections
 import android.view.Menu
@@ -26,7 +25,7 @@ import android.content.Context
 import android.provider.Settings
 import android.app.ProgressDialog
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executors
 import android.content.DialogInterface
 import androidx.core.app.ActivityCompat
 import java.util.concurrent.ExecutorService
@@ -34,7 +33,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.documentfile.provider.DocumentFile
-import com.ecodemo.silk.databinding.ActivityMainBinding
+import com.xmoieo.silk.databinding.ActivityMainBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.DividerItemDecoration
 
@@ -87,34 +86,29 @@ class OtherDecoder : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
         actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         adapter = MxRecyclerAdapter(this, list)
-        var decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         binding.recycle.addItemDecoration(decoration)
-        var layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         layoutManager.setRecycleChildrenOnDetach(true)
         binding.recycle.layoutManager = layoutManager
         binding.recycle.adapter = adapter
         binding.recycle.setHasFixedSize(true)
         binding.recycle.setItemViewCacheSize(60)
-        binding.recycle.setDrawingCacheEnabled(true)
+        @Suppress("DEPRECATION")
+        binding.recycle.isDrawingCacheEnabled = true
         
-        
-        /* if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){ //安卓11 以上
-            if(!FileUriUtils.isGrant(this@OtherDecoder)){
-                FileUriUtils.startForRoot(this@OtherDecoder, 200)
-                return;
-            }
-            document = DocumentFile.fromTreeUri(this, Uri.parse(FileUriUtils.changeToUri("/storage/emulated/0/Silk解码器/")))
-        } else {
-            var file_: File = File(sd_path, "Silk解码器")
-            document = DocumentFile.fromFile(file_)
-        } */
-        var file_: File = File(sd_path, "Silk解码器")
+        // Silk解码器 目录在外部存储根目录，不需要特殊权限
+        val file_ = File(sd_path, "Silk解码器")
+        if (!file_.exists()) {
+            file_.mkdirs()
+        }
         document = DocumentFile.fromFile(file_)
         
         scanFiles()
@@ -161,6 +155,7 @@ class OtherDecoder : Activity() {
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 	    when(item.getItemId()){
 	        2 -> {
+	            @Suppress("DEPRECATION")
 	            progress = ProgressDialog.show(this, "正在排序，请稍候...", null, true, false)
 	            Thread {
 	                list.sortBy({ it.lastModified().toInt() })
@@ -168,6 +163,7 @@ class OtherDecoder : Activity() {
 	            }.start()
 	        }
 	        3 -> {
+	            @Suppress("DEPRECATION")
 	            progress = ProgressDialog.show(this, "正在排序，请稍候...", null, true, false)
 	            Thread {
 	                list.sortByDescending({ it.lastModified().toInt() })
@@ -185,18 +181,20 @@ class OtherDecoder : Activity() {
     }
 	
 	
-	override fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, Data)
-        var uri: Uri? = Data?.getData()
-        if (requestCode == 200 && uri != null) {
-            var flag = (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            getContentResolver().takePersistableUriPermission(uri, Data!!.flags and flag)
-            reload()
+	@Deprecated("Deprecated in Java")
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == 200) {
+            if (FileUriUtils.handleActivityResult(this, requestCode, resultCode, data, 200)) {
+                reload()
+            }
         }
     }
     
+    @Suppress("DEPRECATION")
     fun reload() {
-		var intent = getIntent()
+		val intent = getIntent()
 		overridePendingTransition(0, 0)
 		intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
 		finish()
@@ -217,9 +215,10 @@ class OtherDecoder : Activity() {
         return matcher.matches()
     }
     
+    @Suppress("DEPRECATION")
     fun scanFiles() {
         list.clear()
-        var files: Array<DocumentFile>? = document?.listFiles()
+        val files: Array<DocumentFile>? = document?.listFiles()
         progress = ProgressDialog.show(this, "正在扫描，请稍候...", null, true, false)
         
         var exe = Executors.newCachedThreadPool()

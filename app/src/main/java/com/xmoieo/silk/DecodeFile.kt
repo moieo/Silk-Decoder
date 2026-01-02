@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 import java.io.File
 import android.net.Uri
 import kotlin.Suppress
@@ -10,7 +10,6 @@ import android.os.Looper
 import android.view.View
 import java.util.LinkedList
 import java.lang.Runnable
-import java.lang.Character
 import android.os.Message
 import java.util.Collections
 import android.view.Menu
@@ -33,7 +32,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.documentfile.provider.DocumentFile
-import com.ecodemo.silk.databinding.DecodeFileBinding
+import com.xmoieo.silk.databinding.DecodeFileBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.DividerItemDecoration
 
@@ -53,38 +52,42 @@ class DecodeFile: Activity() {
         }
         false
     }
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
         binding = DecodeFileBinding.inflate(layoutInflater)
         actionBar?.setDisplayHomeAsUpEnabled(true)
         setContentView(binding.root)
         
         adapter = DecodeAdapter(this, list)
-        var decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         binding.recycle.addItemDecoration(decoration)
-        var layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         layoutManager.setRecycleChildrenOnDetach(true)
         binding.recycle.layoutManager = layoutManager
         binding.recycle.adapter = adapter
         binding.recycle.setHasFixedSize(true)
         binding.recycle.setItemViewCacheSize(60)
-        binding.recycle.setDrawingCacheEnabled(true)
+        @Suppress("DEPRECATION")
+        binding.recycle.isDrawingCacheEnabled = true
         
-        var files = File(sd_path, "Silk解码器/解码")
+        val files = File(sd_path, "Silk解码器/解码")
         if(!files.exists()) {
             files.mkdirs()
         }
-        if(files.listFiles().size == 0) {
+        val fileList = files.listFiles()
+        if(fileList == null || fileList.isEmpty()) {
             binding.tisp.text = "啥也没有"
             binding.tisp.visibility = View.VISIBLE
-            return;
+            return
         }
-        for(file in files.listFiles()) {
+        for(file in fileList) {
             if(file.isFile){
-                var msg = Message()
+                val msg = Message()
                 msg.what = 0
                 msg.obj = file
                 handler.sendMessage(msg)

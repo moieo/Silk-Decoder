@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
@@ -59,7 +59,7 @@ class WaveHeader {
 
     fun WriteChar(bos: ByteArrayOutputStream, id: CharArray) {
         id.forEach {
-            bos.write(it.toInt())
+            bos.write(it.code)
         }
     }
 }

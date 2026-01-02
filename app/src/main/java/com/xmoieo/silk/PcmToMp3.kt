@@ -1,4 +1,4 @@
-package com.ecodemo.silk;
+package com.xmoieo.silk;
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
@@ -6,7 +6,7 @@ import java.io.IOException
 /**
  * PCM 转 MP3 for Kotlin
  *
- * @author Dmeng
+ * @author Moieo
  * @since 2021-7-30
  */
 class PcmToMp3 {

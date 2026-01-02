@@ -3,10 +3,10 @@
 //
 
 #include "coder.h"
-#include "com_ecodemo_silk_SilkCoder.h"
+#include "com_xmoieo_silk_SilkCoder.h"
 
 
-JNIEXPORT void JNICALL Java_com_ecodemo_silk_SilkCoder_encode
+JNIEXPORT void JNICALL Java_com_xmoieo_silk_SilkCoder_encode
         (JNIEnv *env, jclass cls, jstring source, jstring dest, jboolean tencent, jint fs_Hz,
          jint maxInternalSampleRate,
          jint packetSize,
