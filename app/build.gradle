@@ -22,8 +22,8 @@ android {
     applicationId "com.xmoieo.silk"
       minSdkVersion 21
       targetSdkVersion 36
-      versionCode 25
-      versionName "2.0.0"
+      versionCode 26
+      versionName "2.0.1"
       multiDexEnabled true
 
       externalNativeBuild {
