@@ -49,9 +49,20 @@ class MainActivity: PreferenceActivity() {
     addPreferencesFromResource(R.xml.main)
 
     /* 权限申请 */
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)) {
-      initPermission()
-      return
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        // Android 11+ 使用 MANAGE_EXTERNAL_STORAGE 权限
+        if (!Environment.isExternalStorageManager()) {
+          initPermission()
+          return
+        }
+      } else {
+        // Android 6-10 使用 WRITE_EXTERNAL_STORAGE 权限
+        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+          initPermission()
+          return
+        }
+      }
     }
 
     if(!app_cache.exists() && app_cache.isDirectory()) {
@@ -79,14 +90,14 @@ class MainActivity: PreferenceActivity() {
       true
     }
 
-    findPreference("app_coolapk")?.setOnPreferenceClickListener {
-      try {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://apk/com.xmoieo.silk")))
-      } catch (e: Exception) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/com.xmoieo.silk")))
-      }
-      true
-    }
+//    findPreference("app_coolapk")?.setOnPreferenceClickListener {
+//      try {
+//        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://apk/com.xmoieo.silk")))
+//      } catch (e: Exception) {
+//        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/com.xmoieo.silk")))
+//      }
+//      true
+//    }
     
     findPreference("update_log")?.setOnPreferenceClickListener {
       try {
@@ -111,8 +122,7 @@ class MainActivity: PreferenceActivity() {
   @Deprecated("Deprecated in Java")
   override fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
     super.onActivityResult(requestCode, resultCode, Data)
-    val uri: Uri? = Data?.data
-    if (requestCode == 0xFC && uri != null) {
+    if (requestCode == 0xFC) {
       if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
         if(Environment.isExternalStorageManager()){
           Toast.makeText(this, "存储权限授权成功", Toast.LENGTH_SHORT).show()
@@ -120,10 +130,13 @@ class MainActivity: PreferenceActivity() {
           Toast.makeText(this, "你拒绝了授权", Toast.LENGTH_SHORT).show()
           java.lang.System.exit(0)
         }
-      }
-      if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-        Toast.makeText(this, "你拒绝了授权", Toast.LENGTH_SHORT).show()
-        java.lang.System.exit(0)
+      } else {
+        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+          Toast.makeText(this, "存储权限授权成功", Toast.LENGTH_SHORT).show()
+        } else {
+          Toast.makeText(this, "你拒绝了授权", Toast.LENGTH_SHORT).show()
+          java.lang.System.exit(0)
+        }
       }
     }
     reload()
@@ -134,15 +147,15 @@ class MainActivity: PreferenceActivity() {
     .setMessage("你正在使用 Silk解码器 App，本软件基于 Silkv3 开源库，我们也很不想让你给予软件 存储权限，由于 Android 6 以上 系统的一些限制 和 本应用的原理，你只能通过给予权限，才能够使用App，否则你将无法使用本 App，我们不会收集和使用你的任何个人信息，本软件无需联网")
     .setTitle("警告")
     .setPositiveButton("同意", DialogInterface.OnClickListener { _, _->
-      if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-          var intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+          // Android 11+ 使用 MANAGE_EXTERNAL_STORAGE 权限
+          val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
           intent.data = Uri.parse("package:" + getPackageName())
           startActivityForResult(intent, 0xFC)
-        }
-        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-          //没有权限则申请权限
-          ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1);
+        } else {
+          // Android 6-10 使用 WRITE_EXTERNAL_STORAGE 权限
+          ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         }
       }
     }).setNeutralButton("取消", DialogInterface.OnClickListener{ _, _ ->

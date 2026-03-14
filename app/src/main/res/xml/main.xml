@@ -56,10 +56,10 @@
         android:summary="跳转到作者酷安主页">
     </Preference>
     
-    <Preference
-        android:key="app_coolapk"
-        android:title="软件酷安"
-        android:summary="跳转到软件酷安主页">
-    </Preference>
+<!--    <Preference-->
+<!--        android:key="app_coolapk"-->
+<!--        android:title="软件酷安"-->
+<!--        android:summary="跳转到软件酷安主页">-->
+<!--    </Preference>-->
     
 </PreferenceScreen>

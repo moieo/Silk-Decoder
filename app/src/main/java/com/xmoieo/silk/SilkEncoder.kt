@@ -90,6 +90,11 @@ class SilkEncoder : Activity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
         
+        // Android 16 (API 36) 使用新的状态栏处理方式
+        if (Build.VERSION.SDK_INT >= 36) {
+            window.decorView.setFitsSystemWindows(true)
+        }
+
         binding = ActivityEncoderBinding.inflate(layoutInflater)
         setContentView(binding.root)
         actionBar?.setDisplayHomeAsUpEnabled(true)
